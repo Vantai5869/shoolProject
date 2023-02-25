@@ -1,26 +1,29 @@
-version: "3.9"
-
+version: '3'
 services:
   api-gateway-graphql:
-    build: 
-      context: api-gateway-graphql
+    build:
+      context: ./api-gateway-graphql
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    restart: always
-
+      - '3000:3000'
+    volumes:
+      - './api-gateway-graphql:/usr/src/app'
+    depends_on:
+      - grpc-service-auth
+      - grpc-service-cv
   grpc-service-auth:
     build:
-      context: grpc-service-auth
+      context: ./grpc-service-auth
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
-    restart: always
-
+      - '50051:50051'
+    volumes:
+      - './grpc-service-auth:/usr/src/app'
   grpc-service-cv:
     build:
-      context: grpc-service-cv
+      context: ./grpc-service-cv
       dockerfile: Dockerfile
     ports:
-      - "3002:3002"
-    restart: always
+      - '50052:50052'
+    volumes:
+      - './grpc-service-cv:/usr/src/app'

@@ -1,18 +1,20 @@
-# Choose a base image
-FROM node:14
+# Sử dụng node version 14.17.6
+FROM node:14.17.6
 
-# Set the working directory
-WORKDIR /app
+# Thiết lập thư mục làm việc trong container
+WORKDIR /usr/src/app
 
-# Copy package files and install dependencies
+# Copy package.json và package-lock.json vào container
 COPY package*.json ./
+
+# Cài đặt các package cần thiết cho ứng dụng
 RUN npm install
 
-# Copy the rest of the application
+# Copy source code vào container
 COPY . .
 
-# Expose the port the app listens on
+# Mở cổng 3000 để truy cập ứng dụng
 EXPOSE 3000
 
-# Start the app
-CMD [ "npm", "start" ]
+# Khởi động ứng dụng khi container được chạy
+CMD ["npm", "start"]
