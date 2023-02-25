@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Khởi động ứng dụng khi container được chạy
-CMD ["npm", "start"]
+CMD ["npm", "start:prod"]
