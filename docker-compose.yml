@@ -1,0 +1,23 @@
+version: '3'
+services:
+  api-gateway-graphql:
+    build: ./api-gateway-graphql
+    command: yarn start
+    volumes:
+      - ./api-gateway-graphql:/app
+    ports:
+      - "3001:3001"
+  grpc-service-auth:
+    build: ./grpc-service-auth
+    command: yarn start
+    volumes:
+      - ./grpc-service-auth:/app
+    ports:
+      - "3002:3002"
+  grpc-service-cv:
+    build: ./grpc-service-cv
+    command: yarn start
+    volumes:
+      - ./grpc-service-cv:/app
+    ports:
+      - "3003:3003"
