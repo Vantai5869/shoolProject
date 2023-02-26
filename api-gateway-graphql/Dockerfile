@@ -9,6 +9,7 @@ COPY package*.json ./
 
 # Cài đặt các package cần thiết cho ứng dụng
 RUN npm install
+RUN npm build
 
 # Copy source code vào container
 COPY . .
