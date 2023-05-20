@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package payment;
+
+import "commons.proto";
+import "google/protobuf/struct.proto";
+
+enum EPaymentStatus {
+  PENDING = 0;
+  FINISHED = 1;
+  FAILED = 2;
+}
+
+enum EPaymentType {
+  CASH = 0;
+  TRANSFER = 1;
+}
+
+service PaymentService {
+  rpc find(commons.QueryRequest) returns (PaymentPagination) {}
+  rpc findAll(commons.QueryRequest) returns (Payments) {}
+  rpc findById(commons.Id) returns (NullablePayment) {}
+  rpc findOne(commons.QueryRequest) returns (NullablePayment) {}
+  rpc count(commons.QueryRequest) returns (commons.Count) {}
+  rpc create(CreatePaymentInput) returns (Payment) {}
+  rpc callback(CallbackQuery) returns (Payment) {}
+  rpc update(UpdatePaymentInput) returns (Payment) {}
+  rpc delete (commons.Id) returns (commons.Count) {}
+}
+
+message Payment {
+  // default field
+  int32 id = 1;
+  optional string createdAt = 2;
+  optional string updatedAt = 3;
+  optional string deletedAt = 4;
+  optional string createdBy = 5;
+  optional string updatedBy = 6;
+  optional string deletedBy = 7;
+
+  // reserved field
+  optional EPaymentStatus status = 8;
+  optional EPaymentType type = 9;
+  optional int32 userId = 10;
+  optional int32 serviceId = 11;
+  optional int32 bookingId = 12;
+  optional int32 merchantId = 13;
+  optional int32 branchId = 14;
+  optional double totalPrice = 15;
+  optional string vnpUrl = 16;
+}
+
+message CreatePaymentInput {
+  optional EPaymentType type = 1;
+  optional int32 userId = 2;
+  optional int32 serviceId = 3;
+  optional int32 bookingId = 4;
+  optional int32 merchantId = 5;
+  optional int32 branchId = 6;
+  optional double totalPrice = 7;
+  optional string ip = 8;
+}
+
+message UpdatePaymentData {
+  oneof kind {
+    EPaymentType status = 1;
+    EPaymentType type = 2;
+    int32 userId = 3;
+    int32 serviceId = 4;
+    int32 bookingId = 5;
+    int32 merchantId = 6;
+    int32 branchId = 7;
+    double totalPrice = 8;
+    string ip = 9;
+  }
+}
+
+message UpdatePaymentInput {
+  int32 id = 1;
+  UpdatePaymentData data = 2;
+}
+
+message NullablePayment {
+  oneof kind {
+    google.protobuf.NullValue null = 1;
+    Payment payment = 2;
+  }
+}
+
+message PaymentPagination {
+  repeated Payment items = 1;
+  optional commons.PageMeta meta = 2;
+}
+
+message CallbackQuery {
+  string query = 1;
+}
+
+message Payments {
+  repeated Payment items = 1;
+}

@@ -1,0 +1,34 @@
+{
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.fontSize": 12,
+    "search.exclude": {
+        "**/node_modules": true
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.fixAll.eslint": true
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/node_modules": false
+    },
+    "files.eol": "\n",
+    "editor.formatOnPaste": false,
+    "[json]": {
+        "editor.formatOnSave": false
+    },
+    "[handlebars]": {
+        "editor.formatOnSave": false,
+        "editor.formatOnPaste": false,
+    },
+    "prettier.printWidth": 120,
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "clang-format.style": "google"
+}

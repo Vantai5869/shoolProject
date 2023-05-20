@@ -1,20 +1,22 @@
-# Sử dụng node version 14.17.6
-FROM node:14.17.6
+FROM alpine
 
-# Thiết lập thư mục làm việc trong container
-WORKDIR /usr/src/app
+RUN apk add --update nodejs npm
 
-# Copy package.json và package-lock.json vào container
-COPY package*.json ./
+WORKDIR /project
+ADD . /project
+COPY ./libs/grpc-types/src/protos/*.proto /project/dist/
 
-# Cài đặt các package cần thiết cho ứng dụng
+ARG PROTOC_VERSION="3.19.1"
+ARG ARCH="aarch_64"
+
+RUN apk add bash
+RUN apk add gcompat
+
+ADD "https://github.com/protocolbuffers/protobuf/releases/download/v$PROTOC_VERSION/protoc-$PROTOC_VERSION-linux-$ARCH.zip" protoc.zip
+
+RUN mkdir /usr/local/lib/protoc && unzip protoc.zip -d /usr/local/lib/protoc && rm protoc.zip
+RUN ln -s /usr/local/lib/protoc/bin/protoc /usr/local/bin/protoc
+
+RUN chmod -R 0777 init.sh
+
 RUN npm install
-
-# Copy source code vào container
-COPY . .
-
-# Mở cổng 3000 để truy cập ứng dụng
-EXPOSE 3000
-
-# Khởi động ứng dụng khi container được chạy
-CMD ["npm", "start"]

@@ -1,29 +1,38 @@
-version: '3'
+version: "3.9"
+
 services:
-  api-gateway-graphql:
-    build:
-      context: ./api-gateway-graphql
-      dockerfile: Dockerfile
-    ports:
-      - '3000:3000'
+  db:
+    container_name: postgres-do-an
+    image: kartoza/postgis:15-3.3
     volumes:
-      - './api-gateway-graphql:/usr/src/app'
-    depends_on:
-      - grpc-service-auth
-      - grpc-service-cv
-  grpc-service-auth:
-    build:
-      context: ./grpc-service-auth
-      dockerfile: Dockerfile
+      - postgis-data:/var/lib/postgresql
+      - dbbackups:/backups
+    environment:
+      # If you need to create multiple database you can add coma separated databases eg gis,data
+      - POSTGRES_DB=gis,user-service,merchant-service,booking-service,notification-service,payment-service
+      - POSTGRES_USER=admin
+      - POSTGRES_PASS=admin
+      # Add extensions you need to be enabled by default in the DB. Default are the five specified below
+      - POSTGRES_MULTIPLE_EXTENSIONS=postgis,hstore,postgis_topology,postgis_raster,pgrouting
+      - RUN_AS_ROOT=true
     ports:
-      - '50051:50051'
-    volumes:
-      - './grpc-service-auth:/usr/src/app'
-  grpc-service-cv:
-    build:
-      context: ./grpc-service-cv
-      dockerfile: Dockerfile
+      - "5433:5432"
+    restart: on-failure
+    healthcheck:
+      test: "PGPASSWORD=docker pg_isready -h 127.0.0.1 -U docker -d gis"
+
+  redis:
+    container_name: redis-do-an
+    image: redis:alpine
+    hostname: redis
+    restart: on-failure
     ports:
-      - '50052:50052'
+      - "6380:6379"
+    command: redis-server --save 20 1 --loglevel warning
     volumes:
-      - './grpc-service-cv:/usr/src/app'
+      - redis-do-an-data:/data
+
+volumes:
+  dbbackups:
+  postgis-data:
+  redis-do-an-data:
